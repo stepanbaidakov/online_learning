@@ -6,6 +6,8 @@ from .managers import CustomUserManager
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=11)
+    city = models.CharField(max_length=50)
     full_name = models.CharField(max_length=35, verbose_name="Ф.И.О.", null=True, blank=True)
     avatar = models.ImageField(upload_to="avatars", blank=True, null=True)
     is_active = models.BooleanField(default=True)
