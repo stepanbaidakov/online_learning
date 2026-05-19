@@ -136,9 +136,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 AUTH_USER_MODEL = "users.CustomUser"
 
-LOGIN_REDIRECT_URL = 'newsletter:home'
-LOGIN_URL = 'users:login'
-
 CACHES = {
     'default': {
         'BACKEND': os.getenv('BACKEND'),
