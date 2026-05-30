@@ -1,6 +1,8 @@
+from users.models import Payment
 from .models import Course, Lesson
 from rest_framework import viewsets, generics
 from .serializers import CourseSerializer, LessonSerializer
+from rest_framework.filters import SearchFilter, OrderingFilter
 # Create your views here.
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -29,3 +31,4 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
+
