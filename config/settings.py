@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'users',
-    'online_learning'
+    # 'django.contrib.staticfiles',
+    "django_filters",
+    'materials'
 ]
 
 MIDDLEWARE = [
@@ -86,6 +86,13 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+
+    ),
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -117,11 +124,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+# STATIC_URL = '/static/'
+#
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -136,9 +143,6 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 AUTH_USER_MODEL = "users.CustomUser"
-
-LOGIN_REDIRECT_URL = 'newsletter:home'
-LOGIN_URL = 'users:login'
 
 CACHES = {
     'default': {
