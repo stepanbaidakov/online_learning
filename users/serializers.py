@@ -3,37 +3,28 @@ from .models import CustomUser, Payment
 from django.contrib.auth import get_user_model
 
 
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+
 class UserSerializer(serializers.ModelSerializer):
-    payments_count = serializers.SerializerMethodField()
+    payments_history = PaymentSerializer(source="payment", read_only=True, many=True)
 
     class Meta:
         model = CustomUser
-        fields = ["email", "phone_number", "city", "full_name", "avatar", "password", "payments_count"]
+        fields = ["email", "phone_number", "city", "full_name", "avatar", "password", "payments_history"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         User = get_user_model()
         return User.objects.create_user(**validated_data)
 
-    def get_payments_count(self, obj):
-        return obj.payment.count()
-
 
 class UserListSerializer(serializers.ModelSerializer):
-    payments_count = serializers.SerializerMethodField()
+    payments_history = PaymentSerializer(source="payment", read_only=True, many=True)
     class Meta:
         model = CustomUser
-        fields = ["id", "password", "full_name", "payments_count", "email"]
+        fields = ["id", "password", "full_name", "payments_history", "email"]
         extra_kwargs = {"password": {"write_only": True}}
-
-    def get_payments_count(self, obj):
-        return obj.payment.count()
-
-
-class PaymentSerializer(serializers.ModelSerializer):
-
-    payment_history = serializers.SerializerMethodField()
-    class Meta:
-        model = Payment
-        fields = '__all__'
-
