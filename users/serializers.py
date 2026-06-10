@@ -20,9 +20,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserListSerializer(serializers.ModelSerializer):
+    payments_count = serializers.SerializerMethodField()
     class Meta:
         model = CustomUser
-        exclude = ["password", "full_name", "payments_count"]
+        fields = ["id", "password", "full_name", "payments_count", "email"]
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def get_payments_count(self, obj):
+        return obj.payment.count()
 
 
 class PaymentSerializer(serializers.ModelSerializer):

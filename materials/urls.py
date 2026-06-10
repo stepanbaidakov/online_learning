@@ -1,5 +1,5 @@
 from materials.views import CourseViewSet, LessonListAPIView, LessonUpdateAPIView, LessonRetrieveAPIView, \
-    LessonDestroyAPIView, LessonCreateAPIView
+    LessonDestroyAPIView, LessonCreateAPIView, ManageSubscriptionView
 from rest_framework import routers
 from django.urls import path
 
@@ -14,4 +14,5 @@ urlpatterns = [
     path("lessons/<int:pk>/update/", LessonUpdateAPIView.as_view(), name="lesson_update"),
     path("lessons/<int:pk>/delete/", LessonDestroyAPIView.as_view(), name="lesson_delete"),
     path("lessons/create/", LessonCreateAPIView.as_view(), name="lesson_create"),
+    path("subs/", ManageSubscriptionView.as_view(), name="subs"),
 ] + router.urls

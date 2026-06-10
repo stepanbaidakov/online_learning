@@ -33,3 +33,8 @@ class Lesson(models.Model):
         db_table = 'lesson'
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='subscriptions', null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='subscriptions', null=True, blank=True)

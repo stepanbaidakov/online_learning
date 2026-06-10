@@ -1,13 +1,16 @@
-from rest_framework.permissions import IsAuthenticated
-from .models import Course, Lesson
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import Course, Lesson, Subscription
 from rest_framework import viewsets, generics
 from .serializers import CourseSerializer, LessonSerializer
 from .permissions import IsModerator, IsOwner
 from rest_framework.filters import SearchFilter, OrderingFilter
+from .paginators import MyPaginator
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 class CourseViewSet(viewsets.ModelViewSet):
-    # queryset = Course.objects.all()
+    pagination_class = MyPaginator
     serializer_class = CourseSerializer
 
     def get_permissions(self):
@@ -31,12 +34,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             if self.request.user.groups.filter(name='moderator').exists():
                 return Course.objects.all()
-            else:
-                courses =[]
-                for course in Course.objects.all():
-                    if course.owner == self.request.user:
-                        courses.append(course)
-                return courses
+
+            return Course.objects.filter(owner=self.request.user)
         else:
             return Course.objects.all()
 
@@ -51,16 +50,12 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
-
+    pagination_class = MyPaginator
     def get_queryset(self):
         if self.request.user.groups.filter(name='moderator').exists():
             return Lesson.objects.all()
-        else:
-            lessons = []
-            for lesson in Lesson.objects.all():
-                if lesson.owner == self.request.user:
-                    lessons.append(lessons)
-            return lessons
+
+        return Lesson.objects.filter(owner=self.request.user)
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
@@ -78,3 +73,21 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
     permission_classes = [IsOwner]
+
+
+class ManageSubscriptionView(APIView):
+
+    def post(self, *args, **kwargs):
+        user_id = self.request.user.id
+        course_id = self.request.data.get("course")
+
+        subs_item = Subscription.objects.filter(course_id=course_id, user_id=user_id)
+
+        if subs_item.exists():
+            subs_item.delete()
+            message = 'подписка удалена'
+        else:
+            Subscription.objects.create(user_id=user_id, course_id=course_id)
+            message = 'подписка добавлена'
+
+        return Response({"message": message})
