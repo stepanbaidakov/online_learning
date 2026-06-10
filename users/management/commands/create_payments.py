@@ -10,7 +10,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         User = get_user_model()
         try:
-            user = User.objects.get(id=1)
+            user = User.objects.get(id=7)
         except User.DoesNotExist:
             raise CommandError("Пользователь с id=1 не найден")
         try:
