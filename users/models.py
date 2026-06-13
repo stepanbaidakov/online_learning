@@ -37,6 +37,8 @@ class Payment(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='lesson', null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     method = models.CharField(max_length=30, choices=METHOD_CHOICES)
+    status = models.CharField(max_length=30, null=True, blank=True)
+    stripe_session_id = models.CharField(max_length=255,unique=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user} - {self.date} - {self.amount}"

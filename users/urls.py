@@ -1,6 +1,7 @@
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .views import UserUpdateAPIView, PaymentListAPIView, UserRetrieveAPIView, UserDestroyAPIView, UserListAPIView, RegisterAPIView
+from .views import UserUpdateAPIView, PaymentListAPIView, UserRetrieveAPIView, UserDestroyAPIView, UserListAPIView, \
+    RegisterAPIView, PaymentStatusAPIView, CreatePaymentAPIView
 from django.urls import path
 
 app_name = "users"
@@ -14,4 +15,6 @@ urlpatterns = [
     path("payments/", PaymentListAPIView.as_view(), name="payment-list"),
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("payments/status/<str:session_id>/", PaymentStatusAPIView.as_view(), name="payment-status"),
+    path("payments/create/<int:pk>/", CreatePaymentAPIView.as_view(), name="payment-create"),
 ]

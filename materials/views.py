@@ -2,16 +2,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Course, Lesson, Subscription
 from rest_framework import viewsets, generics
-from .serializers import CourseSerializer, LessonSerializer
+from .serializers import CourseSerializer, LessonSerializer, CourseListSerializer
 from .permissions import IsModerator, IsOwner
-from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginators import MyPaginator
-from django.shortcuts import get_object_or_404
 # Create your views here.
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     pagination_class = MyPaginator
-    serializer_class = CourseSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CourseListSerializer
+        return CourseSerializer
 
     def get_permissions(self):
 
