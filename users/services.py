@@ -4,7 +4,11 @@ import os
 from stripe import StripeClient
 from django.urls import reverse_lazy
 from rest_framework.response import Response
-
+import json
+from datetime import timedelta
+from django.utils import timezone
+from django_celery_beat.models import PeriodicTask, \
+    IntervalSchedule
 
 def create_checkout_session(request, *args, **kwargs):
     course = Course.objects.get(pk=kwargs.get("pk"))
@@ -36,3 +40,16 @@ def create_checkout_session(request, *args, **kwargs):
 
     payment_status = reverse_lazy("users:payment-status", kwargs={"session_id": session.id})
     return Response({"checkout_url": session.url, "payment_status_url": payment_status})
+
+# Создаем интервал для повтора
+schedule, created = IntervalSchedule.objects.get_or_create(
+     every=30,
+     period=IntervalSchedule.DAYS,
+ )
+
+# Создаем задачу для повторения
+PeriodicTask.objects.get_or_create(
+     interval=schedule,
+     name='Block inactive users',
+     task='users.tasks.check_inactive_users'
+ )

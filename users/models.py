@@ -15,6 +15,7 @@ class CustomUser(AbstractUser):
     full_name = models.CharField(max_length=35, verbose_name="Ф.И.О.", null=True, blank=True)
     avatar = models.ImageField(upload_to="avatars", blank=True, null=True)
     is_active = models.BooleanField(default=True)
+    last_login = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

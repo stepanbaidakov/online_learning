@@ -9,9 +9,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 import os
 from stripe import StripeClient
-from materials.models import Course
-from django.urls import reverse_lazy
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .services import create_checkout_session
+from .serializers import CustomTokenObtainPairSerializer
 
 # Create your views here.
 
@@ -74,3 +74,7 @@ class PaymentStatusAPIView(APIView):
             "amount": payment.amount,
             "course": payment.course.title,
         })
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer

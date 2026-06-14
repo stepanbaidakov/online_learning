@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Course, Lesson, Subscription
@@ -5,6 +7,7 @@ from rest_framework import viewsets, generics
 from .serializers import CourseSerializer, LessonSerializer, CourseListSerializer
 from .permissions import IsModerator, IsOwner
 from .paginators import MyPaginator
+from .tasks import send_course_mail
 # Create your views here.
 
 
@@ -42,6 +45,14 @@ class CourseViewSet(viewsets.ModelViewSet):
         else:
             return Course.objects.all()
 
+    def perform_update(self, serializer):
+        course = self.get_object()
+        last_update = course.updated_at
+        now = timezone.now()
+        if now - last_update > timedelta(hours=4):
+            send_course_mail.delay(course.id)
+        serializer.save()
+
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
@@ -66,6 +77,11 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     queryset = Lesson.objects.all()
     permission_classes = [IsModerator | IsOwner]
 
+    def perform_update(self, serializer):
+        lesson = serializer.save()
+        course = lesson.course
+        course.updated_at = timezone.now()
+        course.save(update_fields=['updated_at'])
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = LessonSerializer

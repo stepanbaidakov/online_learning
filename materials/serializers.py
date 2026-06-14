@@ -47,7 +47,7 @@ class CourseListSerializer(serializers.ModelSerializer):
         return obj.lessons.count()
 
     def get_subscription(self, obj):
-        user = obj.owner
+        user = self.context['request'].user
         course = obj
         subs_item = Subscription.objects.filter(course=course, user=user)
         return subs_item.exists()
