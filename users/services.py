@@ -51,5 +51,5 @@ schedule, created = IntervalSchedule.objects.get_or_create(
 PeriodicTask.objects.get_or_create(
      interval=schedule,
      name='Block inactive users',
-     task='users.tasks.check_inactive_users'
+     task='users.tasks.block_inactive_users',
  )
