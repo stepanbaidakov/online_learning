@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics
 from .serializers import CourseSerializer, LessonSerializer, CourseListSerializer
 from .permissions import IsModerator, IsOwner
 from .paginators import MyPaginator
-from services import update_needed_check
+from services import notify_if_needed
 # Create your views here.
 
 
@@ -45,7 +45,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         course = self.get_object()
-        update_needed_check(course)
+        notify_if_needed(course)
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
@@ -73,7 +73,7 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         lesson = serializer.save()
-        update_needed_check(lesson.course)
+        notify_if_needed(lesson.course)
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):

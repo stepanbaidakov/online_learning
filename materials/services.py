@@ -3,7 +3,7 @@ from .tasks import send_course_mail
 from datetime import timedelta
 
 
-def update_needed_check(course):
+def notify_if_needed(course):
     now = timezone.now()
 
     if now - course.updated_at > timedelta(hours=4):
