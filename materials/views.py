@@ -2,16 +2,20 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Course, Lesson, Subscription
 from rest_framework import viewsets, generics
-from .serializers import CourseSerializer, LessonSerializer
+from .serializers import CourseSerializer, LessonSerializer, CourseListSerializer
 from .permissions import IsModerator, IsOwner
-from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginators import MyPaginator
-from django.shortcuts import get_object_or_404
+from services import notify_if_needed
 # Create your views here.
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     pagination_class = MyPaginator
-    serializer_class = CourseSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CourseListSerializer
+        return CourseSerializer
 
     def get_permissions(self):
 
@@ -39,6 +43,10 @@ class CourseViewSet(viewsets.ModelViewSet):
         else:
             return Course.objects.all()
 
+    def perform_update(self, serializer):
+        course = self.get_object()
+        notify_if_needed(course)
+
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
@@ -62,6 +70,10 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsModerator | IsOwner]
+
+    def perform_update(self, serializer):
+        lesson = serializer.save()
+        notify_if_needed(lesson.course)
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):

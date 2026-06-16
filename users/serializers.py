@@ -1,9 +1,12 @@
 from rest_framework import serializers
 from .models import CustomUser, Payment
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.utils import timezone
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Payment
         fields = '__all__'
@@ -28,3 +31,14 @@ class UserListSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ["id", "password", "full_name", "payments_history", "email"]
         extra_kwargs = {"password": {"write_only": True}}
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        self.user.last_login = timezone.now()
+        self.user.save(update_fields=["last_login"])
+
+        return data
