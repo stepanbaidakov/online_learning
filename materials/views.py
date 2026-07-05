@@ -5,7 +5,7 @@ from rest_framework import viewsets, generics
 from .serializers import CourseSerializer, LessonSerializer, CourseListSerializer
 from .permissions import IsModerator, IsOwner
 from .paginators import MyPaginator
-from services import notify_if_needed
+from .services import notify_if_needed
 # Create your views here.
 
 
