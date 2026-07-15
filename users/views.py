@@ -1,19 +1,21 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .permissions import IsOwner
+import os
+
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter
-from .serializers import UserSerializer, PaymentSerializer, UserListSerializer
-from .models import CustomUser, Payment
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
-import os
-from stripe import StripeClient
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+from stripe import StripeClient
+
+from .models import CustomUser, Payment
+from .permissions import IsOwner
+from .serializers import CustomTokenObtainPairSerializer, PaymentSerializer, UserListSerializer, UserSerializer
 from .services import create_checkout_session
-from .serializers import CustomTokenObtainPairSerializer
 
 # Create your views here.
+
 
 class UserUpdateAPIView(generics.UpdateAPIView):
     serializer_class = UserSerializer
@@ -62,18 +64,18 @@ class PaymentStatusAPIView(APIView):
         client = StripeClient(os.getenv("API_KEY"))
 
         session = client.v1.checkout.sessions.retrieve(session_id)
-        payment = Payment.objects.get(
-            stripe_session_id=session_id
-        )
+        payment = Payment.objects.get(stripe_session_id=session_id)
 
         payment.status = session.payment_status
         payment.save()
 
-        return Response({
-            "status": payment.status,
-            "amount": payment.amount,
-            "course": payment.course.title,
-        })
+        return Response(
+            {
+                "status": payment.status,
+                "amount": payment.amount,
+                "course": payment.course.title,
+            }
+        )
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):

@@ -1,11 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from .managers import CustomUserManager
+
 from config.settings import AUTH_USER_MODEL
 from materials.models import Course, Lesson
 
+from .managers import CustomUserManager
 
 # Create your models here.
+
 
 class CustomUser(AbstractUser):
     username = None
@@ -17,7 +19,7 @@ class CustomUser(AbstractUser):
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, blank=True)
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
 
@@ -32,19 +34,19 @@ class Payment(models.Model):
 
     METHOD_CHOICES = [("cash", "Наличные"), ("transfer", "Перевод на счет")]
 
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payment')
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="payment")
     date = models.DateField(auto_now_add=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course', null=True, blank=True)
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='lesson', null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="course", null=True, blank=True)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="lesson", null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     method = models.CharField(max_length=30, choices=METHOD_CHOICES)
     status = models.CharField(max_length=30, null=True, blank=True)
-    stripe_session_id = models.CharField(max_length=255,unique=True, null=True, blank=True)
+    stripe_session_id = models.CharField(max_length=255, unique=True, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user} - {self.date} - {self.amount}"
 
     class Meta:
-        db_table = 'payment'
+        db_table = "payment"
         verbose_name = "payment"
         verbose_name_plural = "payments"

@@ -1,14 +1,17 @@
-from materials.models import Course, Lesson
-from rest_framework import serializers
-from .validators import VideoValidator
-from .models import Subscription
 from django.urls import reverse_lazy
+
+from rest_framework import serializers
+
+from materials.models import Course, Lesson
+
+from .models import Subscription
+from .validators import VideoValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = '__all__'
+        fields = "__all__"
         validators = [VideoValidator()]
 
 
@@ -47,7 +50,7 @@ class CourseListSerializer(serializers.ModelSerializer):
         return obj.lessons.count()
 
     def get_subscription(self, obj):
-        user = self.context['request'].user
+        user = self.context["request"].user
         course = obj
         subs_item = Subscription.objects.filter(course=course, user=user)
         return subs_item.exists()
