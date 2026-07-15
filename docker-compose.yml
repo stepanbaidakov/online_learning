@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
 
   nginx:
@@ -10,10 +8,9 @@ services:
       - web
 
   web:
-    build: .
+    image: baistepan/online_learning:${IMAGE_TAG:-latest}
     command: sh -c "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/app
       - static_volume:/app/staticfiles
     env_file:
       - .env
@@ -22,7 +19,7 @@ services:
       - redis
 
   worker:
-    build: .
+    image: baistepan/online_learning:${IMAGE_TAG:-latest}
     command: celery -A config worker -l info
     volumes:
       - .:/app
@@ -32,7 +29,7 @@ services:
       - redis
 
   beat:
-    build: .
+    image: baistepan/online_learning:${IMAGE_TAG:-latest}
     command: celery -A config beat -l info
     volumes:
       - .:/app
@@ -51,7 +48,7 @@ services:
   redis:
     image: redis
     volumes:
-      - redis_volume:/data env_files
+      - redis_volume:/data
 
 volumes:
   postgres_data:
