@@ -15,7 +15,7 @@ class LessonsCreateTestCase(APITestCase):
         User = get_user_model()
         self.moderator_group = Group.objects.create(name="moderator")
         self.user = User.objects.create_user(email="test@email.com", password="123")
-        self.course = Course.objects.create(title="test", description="test")
+        self.course = Course.objects.create(title="test", description="test", price=100)
         self.client.force_authenticate(user=self.user)
         self.data = {
             "title": "beginning",
@@ -30,6 +30,7 @@ class LessonsCreateTestCase(APITestCase):
             "description": "course on python programming",
             "video_link": "https://youtube.com",
             "course": self.course.id,
+            "price": 100
         }
         response = self.client.post("/lessons/create/", self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -43,6 +44,7 @@ class LessonsCreateTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": 1,
                 "owner": 1,
+                "price": "100.00"
             },
         )
 
@@ -52,6 +54,7 @@ class LessonsCreateTestCase(APITestCase):
             "description": "course on python programming",
             "video_link": "https://lajflajl.com",
             "course": self.course.id,
+            "price": 100
         }
 
         response = self.client.post("/lessons/create/", self.data)
@@ -83,13 +86,14 @@ class LessonsTestCase(APITestCase):
         self.user_moderator = User.objects.create_user(email="email@email.com", password="123")
         self.user_outsider = User.objects.create_user(email="email@gmail.com", password="123")
         self.user_moderator.groups.add(self.moderator_group)
-        self.course = Course.objects.create(title="test", description="test")
+        self.course = Course.objects.create(title="test", description="test", price=100)
         self.lesson = Lesson.objects.create(
             title="beginning",
             description="test",
             video_link="https://youtube.com",
             course=self.course,
             owner=self.user_owner,
+            price=100
         )
 
     def test_lesson_list_owner(self):
@@ -111,6 +115,7 @@ class LessonsTestCase(APITestCase):
                         "video_link": "https://youtube.com",
                         "course": self.course.id,
                         "owner": self.user_owner.id,
+                        "price": "100.00"
                     }
                 ],
             },
@@ -141,6 +146,7 @@ class LessonsTestCase(APITestCase):
                         "video_link": "https://youtube.com",
                         "course": self.course.id,
                         "owner": self.user_owner.id,
+                        "price": "100.00"
                     }
                 ],
             },
@@ -160,6 +166,7 @@ class LessonsTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": self.course.id,
                 "owner": self.user_owner.id,
+                "price": "100.00"
             },
         )
 
@@ -183,6 +190,7 @@ class LessonsTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": self.course.id,
                 "owner": self.user_owner.id,
+                "price": "100.00"
             },
         )
 
@@ -201,6 +209,7 @@ class LessonsTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": self.course.id,
                 "owner": self.user_owner.id,
+                "price": "100.00"
             },
         )
         self.assertTrue(Lesson.objects.filter(id=self.lesson.id).exists())
@@ -236,6 +245,7 @@ class LessonsTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": self.course.id,
                 "owner": self.user_owner.id,
+                "price": "100.00"
             },
         )
         self.assertTrue(Lesson.objects.filter(id=self.lesson.id).exists())
@@ -273,7 +283,7 @@ class SubscriptionsTestCase(APITestCase):
         User = get_user_model()
         self.user = User.objects.create_user(email="test@email.com", password="123")
         self.client.force_authenticate(user=self.user)
-        self.course = Course.objects.create(title="test", description="test")
+        self.course = Course.objects.create(title="test", description="test", price=100)
         self.data = {"user": self.user.id, "course": self.course.id}
 
     def test_subscribe(self):
