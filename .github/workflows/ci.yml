@@ -76,6 +76,11 @@ jobs:
     needs: build
 
     steps:
+      - name: Debug SSH key
+        run: |
+          echo "${{ secrets.SSH_KEY }}" | head -1
+          echo "${{ secrets.SSH_KEY }}" | tail -1
+
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.10.0
         with:
