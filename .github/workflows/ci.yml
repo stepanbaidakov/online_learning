@@ -76,10 +76,6 @@ jobs:
     needs: build
 
     steps:
-      - name: Debug SSH key
-        run: |
-          echo "${{ secrets.SSH_KEY }}" | head -1
-          echo "${{ secrets.SSH_KEY }}" | tail -1
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.10.0
@@ -92,8 +88,8 @@ jobs:
             set -e 
             cd /var/www/online_learning
             export IMAGE_TAG=${{ github.sha }}
-            docker compose pull web worker beat
-            docker compose up -d web worker beat
+            docker compose pull nginx worker beat
+            docker compose up -d nginx worker beat
             docker compose exec -T web python manage.py migrate
             docker compose exec -T web python manage.py collectstatic --noinput
             docker image prune -f
