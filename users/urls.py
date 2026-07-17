@@ -1,7 +1,18 @@
-from rest_framework_simplejwt.views import TokenRefreshView
-from .views import UserUpdateAPIView, PaymentListAPIView, UserRetrieveAPIView, UserDestroyAPIView, UserListAPIView, \
-    RegisterAPIView, PaymentStatusAPIView, CreatePaymentAPIView, CustomTokenObtainPairView
 from django.urls import path
+
+from rest_framework_simplejwt.views import TokenRefreshView
+
+from .views import (
+    CreatePaymentAPIView,
+    CustomTokenObtainPairView,
+    PaymentListAPIView,
+    PaymentStatusAPIView,
+    RegisterAPIView,
+    UserDestroyAPIView,
+    UserListAPIView,
+    UserRetrieveAPIView,
+    UserUpdateAPIView,
+)
 
 app_name = "users"
 

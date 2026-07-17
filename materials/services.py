@@ -1,6 +1,8 @@
-from django.utils import timezone
-from .tasks import send_course_mail
 from datetime import timedelta
+
+from django.utils import timezone
+
+from .tasks import send_course_mail
 
 
 def notify_if_needed(course):

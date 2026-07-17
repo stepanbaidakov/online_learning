@@ -1,11 +1,13 @@
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from .models import Course, Lesson, Subscription
-from rest_framework import viewsets, generics
-from .serializers import CourseSerializer, LessonSerializer, CourseListSerializer
-from .permissions import IsModerator, IsOwner
 from .paginators import MyPaginator
+from .permissions import IsModerator, IsOwner
+from .serializers import CourseListSerializer, CourseSerializer, LessonSerializer
 from .services import notify_if_needed
+
 # Create your views here.
 
 
@@ -36,7 +38,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.action == "list":
-            if self.request.user.groups.filter(name='moderator').exists():
+            if self.request.user.groups.filter(name="moderator").exists():
                 return Course.objects.all()
 
             return Course.objects.filter(owner=self.request.user)
@@ -59,8 +61,9 @@ class LessonCreateAPIView(generics.CreateAPIView):
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     pagination_class = MyPaginator
+
     def get_queryset(self):
-        if self.request.user.groups.filter(name='moderator').exists():
+        if self.request.user.groups.filter(name="moderator").exists():
             return Lesson.objects.all()
 
         return Lesson.objects.filter(owner=self.request.user)
@@ -97,9 +100,9 @@ class ManageSubscriptionView(APIView):
 
         if subs_item.exists():
             subs_item.delete()
-            message = 'подписка удалена'
+            message = "подписка удалена"
         else:
             Subscription.objects.create(user_id=user_id, course_id=course_id)
-            message = 'подписка добавлена'
+            message = "подписка добавлена"
 
         return Response({"message": message})
