@@ -87,9 +87,10 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             set -e 
             cd /var/www/online_learning
+            git pull
             export IMAGE_TAG=${{ github.sha }}
-            docker compose pull nginx worker beat
-            docker compose up -d nginx worker beat
+            docker compose pull web worker beat 
+            docker compose up -d --build nginx web worker beat
             docker compose exec -T web python manage.py migrate
             docker compose exec -T web python manage.py collectstatic --noinput
             docker image prune -f
