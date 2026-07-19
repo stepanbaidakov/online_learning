@@ -62,11 +62,11 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
+    "http://111.88.157.137:8000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
+    "http://111.88.157.137:8000",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
@@ -109,6 +109,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
