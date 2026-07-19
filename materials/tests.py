@@ -30,7 +30,7 @@ class LessonsCreateTestCase(APITestCase):
             "description": "course on python programming",
             "video_link": "https://youtube.com",
             "course": self.course.id,
-            "price": 100
+            "price": 100,
         }
         response = self.client.post("/lessons/create/", self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -44,7 +44,7 @@ class LessonsCreateTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": 1,
                 "owner": 1,
-                "price": "100.00"
+                "price": "100.00",
             },
         )
 
@@ -54,7 +54,7 @@ class LessonsCreateTestCase(APITestCase):
             "description": "course on python programming",
             "video_link": "https://lajflajl.com",
             "course": self.course.id,
-            "price": 100
+            "price": 100,
         }
 
         response = self.client.post("/lessons/create/", self.data)
@@ -93,7 +93,7 @@ class LessonsTestCase(APITestCase):
             video_link="https://youtube.com",
             course=self.course,
             owner=self.user_owner,
-            price=100
+            price=100,
         )
 
     def test_lesson_list_owner(self):
@@ -115,7 +115,7 @@ class LessonsTestCase(APITestCase):
                         "video_link": "https://youtube.com",
                         "course": self.course.id,
                         "owner": self.user_owner.id,
-                        "price": "100.00"
+                        "price": "100.00",
                     }
                 ],
             },
@@ -146,7 +146,7 @@ class LessonsTestCase(APITestCase):
                         "video_link": "https://youtube.com",
                         "course": self.course.id,
                         "owner": self.user_owner.id,
-                        "price": "100.00"
+                        "price": "100.00",
                     }
                 ],
             },
@@ -166,7 +166,7 @@ class LessonsTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": self.course.id,
                 "owner": self.user_owner.id,
-                "price": "100.00"
+                "price": "100.00",
             },
         )
 
@@ -190,7 +190,7 @@ class LessonsTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": self.course.id,
                 "owner": self.user_owner.id,
-                "price": "100.00"
+                "price": "100.00",
             },
         )
 
@@ -209,7 +209,7 @@ class LessonsTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": self.course.id,
                 "owner": self.user_owner.id,
-                "price": "100.00"
+                "price": "100.00",
             },
         )
         self.assertTrue(Lesson.objects.filter(id=self.lesson.id).exists())
@@ -245,7 +245,7 @@ class LessonsTestCase(APITestCase):
                 "video_link": "https://youtube.com",
                 "course": self.course.id,
                 "owner": self.user_owner.id,
-                "price": "100.00"
+                "price": "100.00",
             },
         )
         self.assertTrue(Lesson.objects.filter(id=self.lesson.id).exists())
